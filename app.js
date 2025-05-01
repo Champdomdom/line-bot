@@ -2,19 +2,15 @@ const express = require('express');
 const line = require('@line/bot-sdk');
 const app = express();
 
-// ตัวแปรสะสมยอด
 let balance = 0;
 
-// ตั้งค่า LINE Bot
 const config = {
   channelAccessToken: process.env.LINE_ACCESS_TOKEN,
   channelSecret: process.env.LINE_CHANNEL_SECRET
 };
 
-// client สำหรับส่งข้อความกลับ
 const client = new line.Client(config);
 
-// webhook endpoint
 app.post('/webhook', line.middleware(config), (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
@@ -25,7 +21,6 @@ app.post('/webhook', line.middleware(config), (req, res) => {
     });
 });
 
-// ฟังก์ชันจัดการข้อความเข้า
 function handleEvent(event) {
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
@@ -34,6 +29,7 @@ function handleEvent(event) {
   const message = event.message.text.trim();
   const regex = /^[+-]\d+$/;
 
+  // ตรวจสอบ + หรือ - ตามด้วยตัวเลข
   if (regex.test(message)) {
     const amount = parseInt(message, 10);
     balance += amount;
@@ -42,13 +38,21 @@ function handleEvent(event) {
       type: 'text',
       text: `ยอดคงเหลือ: ${balance} บาท`
     });
-  } else {
-    // ไม่ตอบถ้าไม่ใช่คำสั่ง + หรือ -
-    return Promise.resolve(null);
   }
+
+  // ตรวจสอบคำถามยอดคงเหลือ
+  const keywords = ['ยอด', 'ยอดรวม', 'ยอดคงเหลือ', 'ยอดเท่าไหร่'];
+  if (keywords.some(keyword => message.includes(keyword))) {
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: `ยอดคงเหลือตอนนี้: ${balance} บาท`
+    });
+  }
+
+  // ถ้าไม่เข้าเงื่อนไขใดเลย ไม่ต้องตอบ
+  return Promise.resolve(null);
 }
 
-// เริ่มเซิร์ฟเวอร์
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
