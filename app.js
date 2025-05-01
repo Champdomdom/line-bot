@@ -4,7 +4,7 @@ const app = express();
 
 // Channel Access Token และ Channel Secret ที่ได้จาก LINE Developers
 const config = {
-  channelAccessToken: 'FS3e/lSXOK7pF0WSusa0HjyGTkh3iAO693BHyAgl4HDGV31E7FSdCenyYGWFunbc3ahqTnTjfc3LshDpm4B1jLe6o8CTXy4fLLn+SGqwlRP0pkNXz5j92bLfeQ0VS52gwGC48qNUyVjHu5RLztAAuwdB04t89/1O/w1cDnyilFU=',
+  channelAccessToken: 'm44r1UgeNuG61hJUy25cIEP5NMtczVAzlS4uMOytr4bWiRSU1pmjNCF34KsF0QAQ3ahqTnTjfc3LshDpm4B1jLe6o8CTXy4fLLn+SGqwlRMX+7S+mE6oHXJKQxNAOwm3T0JPfp/NMwnCktdZHiTJ+wdB04t89/1O/w1cDnyilFU=',
   channelSecret: 'e3fb7962d7d7cb495221de6304194edf'
 };
 
